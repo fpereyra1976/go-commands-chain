@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"prueba/commandchain"
+	"github.com/fpereyra1976/go-commands-chain/commandchain"
 )
 
 type Command1 struct{}
