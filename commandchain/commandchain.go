@@ -6,7 +6,7 @@ import (
 )
 
 type CommandChain struct {
-	commands []Runnable
+	commands []Command
 }
 
 func (commandChain *CommandChain) Execute(ctx *Context) bool {
@@ -19,6 +19,6 @@ func (commandChain *CommandChain) Execute(ctx *Context) bool {
 	return true
 }
 
-func (commandChain *CommandChain) AddCommand(r Runnable) {
-	commandChain.commands = append(commandChain.commands, r)
+func (commandChain *CommandChain) AddCommand(c Command) {
+	commandChain.commands = append(commandChain.commands, c)
 }
