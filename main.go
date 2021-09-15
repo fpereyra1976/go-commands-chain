@@ -4,47 +4,59 @@ import (
 	"fmt"
 	"github.com/fpereyra1976/go-commands-chain/commandchain"
 )
+/* Middle Mile */
+type CheckLHCapacitiesCommand struct{}
+type WriteLHCapacitiesCommand struct{}
 
-type Command1 struct{}
-type Command2 struct{}
-type Command3 struct{}
-
-func (c1 *Command1) Execute(ctx *commandchain.Context) bool {
+func (c3 *CheckLHCapacitiesCommand) Execute(ctx *commandchain.Context) bool {
 	return true
 }
 
-func (c2 *Command2) Execute(ctx *commandchain.Context) bool {
+func (c3 *WriteLHCapacitiesCommand) Execute(ctx *commandchain.Context) bool {
 	return true
 }
 
-func (c3 *Command3) Execute(ctx *commandchain.Context) bool {
+/* Middle Mile */
+
+/* Last Mile */
+type CheckCapacitiesCommand struct{}
+type WriteCapacitiesCommand struct{}
+
+func (c3 *CheckCapacitiesCommand) Execute(ctx *commandchain.Context) bool {
 	return true
 }
+
+func (c3 *WriteCapacitiesCommand) Execute(ctx *commandchain.Context) bool {
+	return true
+}
+/* Last Mile */
+
 
 func main() {
-	chain := commandchain.CommandChain{}
-	chain2 := commandchain.CommandChain{}
+	decorateRouteChain  := commandchain.CommandChain{}
+	decorateLastMileChain  := commandchain.CommandChain{}
+	decorateMiddleMileChain  := commandchain.CommandChain{}
 
-	ctx := commandchain.Context{Route: "Cadena: "}
+	/* Middle Mile */
+	checkLHCapacitiesCommand 		:= CheckLHCapacitiesCommand{}
+	writeLHCapacitiesCommand 		:= WriteLHCapacitiesCommand{}
 
-	c1 := Command1{}
-	c2 := Command2{}
-	c3 := Command3{}
+	decorateMiddleMileChain.AddCommand(&checkLHCapacitiesCommand);
+	decorateMiddleMileChain.AddCommand(&writeLHCapacitiesCommand);
 
-	c4_1 := Command1{}
-	c4_2 := Command2{}
-	c4_3 := Command3{}
+	/* Last Mile */
+	checkCapacitiesCommand 		:= CheckCapacitiesCommand{}
+	writeCapacitiesCommand 		:= WriteCapacitiesCommand{}
 
-	chain2.AddCommand(&c4_1)
-	chain2.AddCommand(&c4_2)
-	chain2.AddCommand(&c4_3)
+	decorateLastMileChain.AddCommand(&checkCapacitiesCommand);
+	decorateLastMileChain.AddCommand(&writeCapacitiesCommand);
 
-	chain.AddCommand(&c1)
-	chain.AddCommand(&c2)
-	chain.AddCommand(&c3)
-	chain.AddCommand(&chain2)
+	/* Route */
+	ctx := commandchain.Context{Route: "Route: "}
+	decorateRouteChain.AddCommand(&decorateMiddleMileChain)
+	decorateRouteChain.AddCommand(&decorateLastMileChain)
 
-	if chain.Execute(&ctx) {
+	if decorateRouteChain.Execute(&ctx) {
 		fmt.Println("Ejecución Exitosa")
 	} else {
 		fmt.Println("Ejecución Fallida")
